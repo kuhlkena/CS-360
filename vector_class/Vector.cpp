@@ -1,6 +1,6 @@
 // Implementation
 
-#include "hw_0.h"
+#include "Vector.h"
 
 // default constructor
 Time::Time() { 
@@ -14,7 +14,7 @@ Time::Time(double m, double h) {
 }
 
 // add time object to time
-void Time::add(Time& OtherTimeObject) {
+void Time::add(const Time& OtherTimeObject) {
 	this->min = this->min + OtherTimeObject.get_time();
 }
 

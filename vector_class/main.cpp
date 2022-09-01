@@ -1,4 +1,4 @@
-#include "hw_0.h"
+#include "Vector.h"
 #include <iostream>
 
 int main() {
@@ -8,5 +8,5 @@ int main() {
 
 	timeA.add(timeB);
 
-	std::cout << timeA.get_time();
+	std::cout << timeA.get_time() << std::endl;
 }
