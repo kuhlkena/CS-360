@@ -69,3 +69,9 @@ Time operator-(const Time& x, const Time& y){
 	return Time(val);
 }
 
+//allow cout to print the min of a time object
+std::ostream& operator<<(std::ostream& os, Time x){
+	os << x.minutes << " min";
+	return os; // send out the ostream
+}
+

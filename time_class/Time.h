@@ -1,3 +1,5 @@
+#include <iostream>
+
 class Time {
   private:
   // declare attribute data
@@ -32,4 +34,7 @@ class Time {
     friend Time operator+(const Time& x, const Time& y);
 
     friend Time operator-(const Time& x, const Time& y);
+
+    //allow cout to print the min of a time object
+    friend std::ostream& operator<<(std::ostream& os, Time x);
 };

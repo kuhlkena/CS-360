@@ -22,4 +22,6 @@ int main() {
 	Time timeC = timeA + timeB;
 
 	timeC.printMinutes();
+
+	std::cout<<timeC<<std::endl;
 }
