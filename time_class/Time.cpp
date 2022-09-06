@@ -1,7 +1,6 @@
 // Implementation
 
 #include "Time.h"
-#include <iostream>
 
 Time::Time() // default constructor - set time value to 0 minutes
 {
