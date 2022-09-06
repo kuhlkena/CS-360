@@ -56,3 +56,16 @@ double Time::getMin() const
 {
 	return this->minutes;
 }
+
+// Main can say timeA + timeB
+Time operator+(const Time& x, const Time& y){
+	Time newTime = Time(x.minutes);
+	newTime.add(y);
+	return newTime;
+}
+
+Time operator-(const Time& x, const Time& y){
+	double val = x.minutes - y.minutes;
+	return Time(val);
+}
+

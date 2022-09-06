@@ -16,4 +16,10 @@ int main() {
 
 	timeA.printDays();
 	timeB.printDays();
+
+	std::cout <<"operator overload: "<< std::endl;
+
+	Time timeC = timeA + timeB;
+
+	timeC.printMinutes();
 }

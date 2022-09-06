@@ -26,5 +26,10 @@ class Time {
     void printHours() const; // prints X hours. Tip - Call on toHours() for code reuse
     void printDays() const; // prints X days. Tip - Call on toDays() for code reuse
 
-	double getMin() const;
+	  double getMin() const; // returns the private min variable
+
+    // Main can say timeA + timeB
+    friend Time operator+(const Time& x, const Time& y);
+
+    friend Time operator-(const Time& x, const Time& y);
 };
