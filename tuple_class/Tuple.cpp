@@ -129,7 +129,10 @@ void Tuple::normalize(){
 // returns dot product of this Tuple and otherTuple using only their x, y, and z values.
 // Otherwise, return 0 if this Tuple and otherTuple are not both vectors.
 double Tuple::dot(const Tuple& otherTuple) const{
-     return(this->x * otherTuple.x) + (this->y * otherTuple.y) + (this->z * otherTuple.z);
+    if(abs(this->w) > 0.001 || abs(otherTuple.getW()) > 0){
+        return 0;
+    }
+    return(this->x * otherTuple.x) + (this->y * otherTuple.y) + (this->z * otherTuple.z);
 }
 
 // Print formatted display of Tuple to std::cout.

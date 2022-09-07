@@ -41,6 +41,7 @@ int main() {
     Tuple E(5,1,2,0);
 
     cout << "Dot product of C and D: " << D.dot(E) << endl; // expect 15
+    cout << "Dot product of A and B: " << A.dot(B) << endl; // expect 0
 
     cout << "Printing A using print(): ";
     A.print(); // expect ( 10, 5, 3, 1 )
