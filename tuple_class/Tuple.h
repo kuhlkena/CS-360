@@ -75,6 +75,9 @@ class Tuple{
         // Print the values in order of x, y, z, and w.
         void print() const;
 
+        // Returns the value of w
+        double getW() const;
+
         // Overloaded operators. The class declares these functions as its 'friends.'
         // The implementation code for the friend functions will receive Tuple object arguments.
         // The friend functions will be able to access the private data attributes
@@ -104,6 +107,9 @@ class Tuple{
         double x;
         double y;
         double z;
+
+    private:
+        // holds the type, 0 = vector and 1 = point
         double w;
 };
 
