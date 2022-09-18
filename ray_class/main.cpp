@@ -19,11 +19,11 @@ int main() {
 	PPM myImage = easyppm_create(imagePixelSize, imagePixelSize, IMAGETYPE_PPM);
 
     // Clear all image pixels to RGB color white.
-    easyppm_clear(&myImage, easyppm_rgb(255, 255, 255));
+    easyppm_clear(&myImage, easyppm_rgb(0, 255, 255));
 
     double w = 4;
     double h = 4;
-    int front_clip = 4;
+    double front_clip = 4;
 
     Ray R;
     Tuple B(-(w/2),0 -(h/2), front_clip, 1); // bottom left corner of screen
@@ -31,17 +31,23 @@ int main() {
     Tuple Y(0,1,0,0);
     Tuple Z(0,0,1,0);
 
-    for(double i = 0; i <= w; i = i + (w/imagePixelSize)){
-        for(double j = 0; j <= h; j = j + (h/imagePixelSize)){
-            Tuple P = B + i*X + j*Y;
+    // I opted to use incraments of 1 rather than w/imagePixelSize in my loop because using a float was causing some strange issues
+    for(int i = 0; i < imagePixelSize; i++){
+        for(int j = 0; j < imagePixelSize; j++){
+
+            float stepX = i/(imagePixelSize/w);
+            float stepY = j/(imagePixelSize/h);
+
+            Tuple P = B + stepX*X + stepY*Y;
             R.direction = P - R.origin;
             R.direction.normalize();
 
             double angle = acos(R.direction.dot(Z)) * 180 / 3.14159;
-            int level = round(angle);
+            int level = round(angle * 1.4);
 
-            easyppm_set(&myImage, i * (imagePixelSize/w), j * (imagePixelSize/h), easyppm_rgb(level, level, level));
-
+            //cout<<i<<"  "<<j<<endl;
+            easyppm_set(&myImage, i, j, easyppm_rgb(level, level, level));
+            
         }
     }
     easyppm_write(&myImage, "gradient.ppm");
