@@ -38,13 +38,13 @@ int main() {
             R.direction.normalize();
 
             double angle = acos(R.direction.dot(Z)) * 180 / 3.14159;
-            int level = 255 - round(angle);
+            int level = round(angle);
 
-            easyppm_set(&myImage, i, j, easyppm_rgb(level, level, level));
+            easyppm_set(&myImage, i * (imagePixelSize/w), j * (imagePixelSize/h), easyppm_rgb(level, level, level));
 
-            easyppm_write(&myImage, "gradient");
-            easyppm_destroy(&myImage);
         }
     }
+    easyppm_write(&myImage, "gradient.ppm");
+    easyppm_destroy(&myImage);
     return 0;
 }
