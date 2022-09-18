@@ -1,3 +1,4 @@
+#include "Tuple.h"
 
 class Ray{
     public:

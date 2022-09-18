@@ -1,4 +1,3 @@
-#include "Tuple.h"
 #include "easyppm.h"
 #include <stdio.h>
 #include <math.h>
@@ -16,29 +15,35 @@ void _test(bool pass){
 
 int main() {
     // Create image of desired dimensions.
-	int myImageWidth = 320;
-	int myImageHeight = 200;
-	PPM myImage = easyppm_create(myImageWidth, myImageHeight, IMAGETYPE_PPM);
+	int imagePixelSize = 200;
+	PPM myImage = easyppm_create(imagePixelSize, imagePixelSize, IMAGETYPE_PPM);
 
     // Clear all image pixels to RGB color white.
     easyppm_clear(&myImage, easyppm_rgb(255, 255, 255));
 
-    int w = 1920;
-    int h = 1080;
-    int z = 500;
+    double w = 4;
+    double h = 4;
+    int front_clip = 4;
 
     Ray R;
+    Tuple B(-(w/2),0 -(h/2), front_clip, 1); // bottom left corner of screen
+    Tuple X(1,0,0,0);
+    Tuple Y(0,1,0,0);
+    Tuple Z(0,0,1,0);
 
-    Tuple base(0 - (w/2),0 - (h/2), z, 1); // bottom left corner of screen
+    for(double i = 0; i <= w; i = i + (w/imagePixelSize)){
+        for(double j = 0; j <= h; j = j + (h/imagePixelSize)){
+            Tuple P = B + i*X + j*Y;
+            R.direction = P - R.origin;
+            R.direction.normalize();
 
-    for(int i = 0 - (w/2); i <= w/2; i++){
-        for(int j = 0 - (h/2); j <= h/2; j++){
-            //iterate over every point on the screen with a step of 1
-            R.direction = Tuple(i,j,z,0); //vector from origin to point on screen
-            Tuple P(i,j,z,0);
-            double angle = acos(R.direction.dot(P));
+            double angle = acos(R.direction.dot(Z)) * 180 / 3.14159;
             int level = 255 - round(angle);
+
             easyppm_set(&myImage, i, j, easyppm_rgb(level, level, level));
+
+            easyppm_write(&myImage, "gradient");
+            easyppm_destroy(&myImage);
         }
     }
     return 0;
