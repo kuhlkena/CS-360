@@ -27,6 +27,7 @@ int main() {
 
     Ray R;
     Tuple B(-(w/2),0 -(h/2), front_clip, 1); // bottom left corner of screen
+    Tuple Camera(0,0,0,1);
     Tuple X(1,0,0,0);
     Tuple Y(0,1,0,0);
     Tuple Z(0,0,1,0);
@@ -39,8 +40,7 @@ int main() {
             float stepY = j/(imagePixelSize/h);
 
             Tuple P = B + stepX*X + stepY*Y;
-            R.direction = P - R.origin;
-            R.direction.normalize();
+            R.set(Camera, P);
 
             double angle = acos(R.direction.dot(Z)) * 180 / 3.14159;
             int level = round(angle * 1.4);
