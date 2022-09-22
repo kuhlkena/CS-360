@@ -4,6 +4,7 @@
 #include <cmath>
 #include "Ray.h"
 #include "Plane.h"
+#include "Sphere.h"
 
 class Workspace{
 
@@ -25,16 +26,18 @@ class Workspace{
 
     private:
 
-        //checks the colision of a ray with objects in the workspace and returns the distance to the hit along vector, returns -1 if there was no hit
+        //checks the colision of a ray with planes in the workspace and returns the distance to the hit along vector, returns -1 if there was no hit
         double _rayHitPlane( const Ray& ray, const Plane& plane);
+
+        //checks the colision of a ray with spheres in the workspace and returns the distance to the hit along vector, returns -1 if there was no hit 
 
         int size;
         double h;
         double w;
         double front;
 
-        Tuple sPos;
-        double sRadius;
+        Sphere spheres[5];
+        int numSpheres;
 
         Plane planes[5];
         int numPlanes;

@@ -20,13 +20,13 @@ Workspace::Workspace(int imagePixelSize, double width, double height, double fro
 
 // create a sphere in our workplace and return true when done
 bool Workspace::createSphere(Tuple position, double radius){
-    this->sPos = position;
-    this->sRadius = radius;
+    this->spheres[this->numSpheres] = Sphere(position, radius);
+    this->numSpheres++;
 }
 
 // create a plane in the workspace
 bool Workspace::createPlane(Tuple position, Tuple vector){
-    this->planes[numPlanes] = Plane(position, vector);
+    this->planes[this->numPlanes] = Plane(position, vector);
     this->numPlanes++;
 }
 
