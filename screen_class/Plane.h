@@ -5,8 +5,8 @@ class Plane{
 
     Plane();
 
-    Plane(Tuple position, Tuple vector);
+    Plane(Tuple Origin, Tuple Normal);
 
-    Tuple pos;
-    Tuple vector;
+    Tuple origin;
+    Tuple normal;
 };

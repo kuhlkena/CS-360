@@ -20,16 +20,16 @@ class Workspace{
         // create a plane in the workspace
         bool createPlane(Tuple position, Tuple vector);
 
+        //checks the colision of a ray with planes in the workspace
+        bool _rayHitPlane( const Ray& ray, const Plane& plane, double& T);
+
+        //checks the colision of a ray with spheres in the workspace
+        bool _rayHitSphere( const Ray& ray, const Sphere& sphere, double& T);
+
         //Render the image and output with filename
         void render(std::string filename);
 
-
     private:
-
-        //checks the colision of a ray with planes in the workspace and returns the distance to the hit along vector, returns -1 if there was no hit
-        double _rayHitPlane( const Ray& ray, const Plane& plane);
-
-        //checks the colision of a ray with spheres in the workspace and returns the distance to the hit along vector, returns -1 if there was no hit 
 
         int size;
         double h;

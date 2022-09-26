@@ -5,8 +5,8 @@ class Sphere{
 
     Sphere();
 
-    Sphere(Tuple position, double r);
+    Sphere(Tuple Origin, double Radius);
 
-    Tuple pos;
+    Tuple origin;
     double r;
 };

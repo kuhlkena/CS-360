@@ -1,4 +1,5 @@
 #include "Workspace.h"
+Tuple camera(0,0,0,1);
 
 //Default constructor
 Workspace::Workspace(){
@@ -19,21 +20,55 @@ Workspace::Workspace(int imagePixelSize, double width, double height, double fro
 
 
 // create a sphere in our workplace and return true when done
-bool Workspace::createSphere(Tuple position, double radius){
-    this->spheres[this->numSpheres] = Sphere(position, radius);
+bool Workspace::createSphere(Tuple origin, double radius){
+    this->spheres[this->numSpheres] = Sphere(origin, radius);
     this->numSpheres++;
+    return true;
 }
 
 // create a plane in the workspace
-bool Workspace::createPlane(Tuple position, Tuple vector){
-    this->planes[this->numPlanes] = Plane(position, vector);
+bool Workspace::createPlane(Tuple origin, Tuple normal){
+    this->planes[this->numPlanes] = Plane(origin, normal);
     this->numPlanes++;
+    return true;
 }
 
-//checks the colision of a ray with objects in the workspace and returns the distance to the hit along vector, returns -1 if there was no hit
-double _rayHitPlane( const Ray& ray, const Plane& plane){
-    //TODO
-    return -1;
+//checks the colision of a ray with objects in the workspace
+bool Workspace::_rayHitPlane( const Ray& ray, const Plane& plane, double& T ){
+    float denom = plane.normal.dot(ray.direction);
+    if (abs(denom) > 0.001f){
+        T = (plane.origin - ray.origin).dot(plane.normal) / denom;
+        if (T > 0) return true;
+        
+    }
+    return false;
+}
+
+//checks the colision of a ray with spheres in the workspace
+bool Workspace::_rayHitSphere( const Ray& ray, const Sphere& sphere, double& T ){
+    
+    double a = ray.direction.dot(ray.direction);
+    Tuple V1 = sphere.origin - camera;
+    double b = 2 * V1.dot(ray.direction);
+    double c = V1.dot(V1) - (sphere.r * sphere.r);
+
+    double discriminant = b*b - 4*a*c;
+    
+    if (discriminant > 0) {
+        double x1 = (-b + sqrt(discriminant)) / (2*a);
+        double x2 = (-b - sqrt(discriminant)) / (2*a);
+        T = min(x1,x2);
+        return true;
+    }
+
+    else if (discriminant == 0) {
+        T = -b/(2*a);
+        return true;
+    }
+    else {
+        T = -1;
+        return false;
+    }
 }
 
 //Render the image and output with filename
@@ -61,16 +96,26 @@ void Workspace::render(std::string filename){
             Tuple P = B + stepX*X + stepY*Y;
             R.set(Camera, P);
 
-            double angle = acos(R.direction.dot(Z)) * 180 / 3.14159;
-            int level = round(angle * 1.4);
+            double distance = 0;
+            double firstPlane = 0; // distance to closest plane
+            int level = 255;
 
+            for(int p = 0; p < numPlanes; p++){
+                if(_rayHitPlane(R, planes[p], distance)) { level = 0; }
+                if(distance > firstPlane) { firstPlane = distance; }
+            }
+
+            for(int s = 0; s < numSpheres; s++){
+                if(_rayHitSphere(R, spheres[s], distance)) { level = 0; }
+            }
+            
             //cout<<i<<"  "<<j<<endl;
             easyppm_set(&myImage, i, j, easyppm_rgb(level, level, level));
             
         }
     }
     // not using filename for now
-    easyppm_write(&myImage, "gradient.ppm");
+    easyppm_write(&myImage, filename.c_str());
     easyppm_destroy(&myImage);
 }
 
