@@ -8,6 +8,7 @@ Workspace::Workspace(){
     this->h = 1;
     this->front = 1;
     this->numPlanes = 0;
+    this->numSpheres = 0;
 }
 
 Workspace::Workspace(int imagePixelSize, double width, double height, double front_clip){
@@ -16,28 +17,29 @@ Workspace::Workspace(int imagePixelSize, double width, double height, double fro
     this->h = height;
     this->front = front_clip;
     this->numPlanes = 0;
+    this->numSpheres = 0;
 }
 
 
 // create a sphere in our workplace and return true when done
-bool Workspace::createSphere(Tuple origin, double radius){
-    this->spheres[this->numSpheres] = Sphere(origin, radius);
+bool Workspace::createSphere(Tuple origin, double radius, int color[3]){
+    this->spheres[this->numSpheres] = Sphere(origin, radius, color);
     this->numSpheres++;
     return true;
 }
 
 // create a plane in the workspace
-bool Workspace::createPlane(Tuple origin, Tuple normal){
-    this->planes[this->numPlanes] = Plane(origin, normal);
+bool Workspace::createPlane(Tuple origin, Tuple normal, int color[3]){
+    this->planes[this->numPlanes] = Plane(origin, normal, color);
     this->numPlanes++;
     return true;
 }
 
 //checks the colision of a ray with objects in the workspace
 bool Workspace::_rayHitPlane( const Ray& ray, const Plane& plane, double& T ){
-    float denom = plane.normal.dot(ray.direction);
-    if (abs(denom) > 0.001f){
-        T = (plane.origin - ray.origin).dot(plane.normal) / denom;
+    float den = plane.normal.dot(ray.direction);
+    if (abs(den) > 0.001f){
+        T = (plane.origin - ray.origin).dot(plane.normal) / den;
         if (T > 0) return true;
         
     }
@@ -48,7 +50,7 @@ bool Workspace::_rayHitPlane( const Ray& ray, const Plane& plane, double& T ){
 bool Workspace::_rayHitSphere( const Ray& ray, const Sphere& sphere, double& T ){
     
     double a = ray.direction.dot(ray.direction);
-    Tuple V1 = sphere.origin - camera;
+    Tuple V1 = camera - sphere.origin;
     double b = 2 * V1.dot(ray.direction);
     double c = V1.dot(V1) - (sphere.r * sphere.r);
 
@@ -74,10 +76,10 @@ bool Workspace::_rayHitSphere( const Ray& ray, const Sphere& sphere, double& T )
 //Render the image and output with filename
 void Workspace::render(std::string filename){
 
-    PPM myImage = easyppm_create(this->size, this->size, IMAGETYPE_PPM);
+    PPM myRender = easyppm_create(this->size, this->size, IMAGETYPE_PPM);
 
     // Clear all image pixels to RGB color white.
-    easyppm_clear(&myImage, easyppm_rgb(225, 255, 255));
+    easyppm_clear(&myRender, easyppm_rgb(225, 255, 255));
 
     Ray R;
     Tuple B(-(this->w/2),0 -(this->h/2), this->front, 1); // bottom left corner of screen
@@ -97,25 +99,47 @@ void Workspace::render(std::string filename){
             R.set(Camera, P);
 
             double distance = 0;
-            double firstPlane = 0; // distance to closest plane
-            int level = 255;
+            int level[3] = {255,255,255};
+            
+            double closest = 1000; //This is the back clip
+            int closestObj = -1;
 
             for(int p = 0; p < numPlanes; p++){
-                if(_rayHitPlane(R, planes[p], distance)) { level = 0; }
-                if(distance > firstPlane) { firstPlane = distance; }
+                if(_rayHitPlane(R, planes[p], distance)) {
+                    if(distance < closest){
+                        closest = distance;
+                        closestObj = p;
+                    }
+                }
             }
 
             for(int s = 0; s < numSpheres; s++){
-                if(_rayHitSphere(R, spheres[s], distance)) { level = 0; }
+                if(_rayHitSphere(R, spheres[s], distance)) {
+                    if(distance < closest){
+                        closest = distance;
+                        closestObj = s + 5;
+                    }
+                }
             }
             
-            //cout<<i<<"  "<<j<<endl;
-            easyppm_set(&myImage, i, j, easyppm_rgb(level, level, level));
+            if(closestObj > 4){ // closest object is a sphere
+                int temp = closestObj - 5;
+                level[0] = spheres[temp].color[0];
+                level[1] = spheres[temp].color[1];
+                level[2] = spheres[temp].color[2];
+            }
+
+            if(closestObj >= 0 && closestObj < 5){ // closest object is a plane
+                level[0] = planes[closestObj].color[0];
+                level[1] = planes[closestObj].color[1];
+                level[2] = planes[closestObj].color[2];
+            }
             
+            easyppm_set(&myRender, i, 199 - j, easyppm_rgb(level[0], level[1], level[2]));
+        
         }
     }
-    // not using filename for now
-    easyppm_write(&myImage, filename.c_str());
-    easyppm_destroy(&myImage);
+    easyppm_write(&myRender, filename.c_str());
+    easyppm_destroy(&myRender);
 }
 

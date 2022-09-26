@@ -15,10 +15,10 @@ class Workspace{
         Workspace(int imagePixelSize, double width, double height, double front_clip);
 
         // create a sphere in our workplace and return true when done
-        bool createSphere(Tuple position, double radius);
+        bool createSphere(Tuple position, double radius, int color[3]);
 
         // create a plane in the workspace
-        bool createPlane(Tuple position, Tuple vector);
+        bool createPlane(Tuple position, Tuple vector, int color[3]);
 
         //checks the colision of a ray with planes in the workspace
         bool _rayHitPlane( const Ray& ray, const Plane& plane, double& T);
