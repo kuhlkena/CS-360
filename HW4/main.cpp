@@ -17,7 +17,7 @@ int main() {
     test2.render("sphere_render.ppm"); // should output as a single black circle in the center of a white image
 
     //Workspace for testing item ordering:
-    Workspace test3(200,4,4,4);
+    Workspace test3(1000,4,4,4);
     int planeColor2[] = {200,0,0};
     int planeColor3[] = {0,200,0};
     int sphereColor2[] = {0,0,200};

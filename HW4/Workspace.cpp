@@ -75,7 +75,6 @@ bool Workspace::_rayHitSphere( const Ray& ray, const Sphere& sphere, double& T )
 
 //Render the image and output with filename
 void Workspace::render(std::string filename){
-
     PPM myRender = easyppm_create(this->size, this->size, IMAGETYPE_PPM);
 
     // Clear all image pixels to RGB color white.
@@ -135,7 +134,7 @@ void Workspace::render(std::string filename){
                 level[2] = planes[closestObj].color[2];
             }
             
-            easyppm_set(&myRender, i, 199 - j, easyppm_rgb(level[0], level[1], level[2]));
+            easyppm_set(&myRender, i, this->size -1 - j, easyppm_rgb(level[0], level[1], level[2]));
         
         }
     }
