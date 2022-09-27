@@ -138,7 +138,7 @@ void Workspace::render(std::string filename){
         
         }
     }
-    easyppm_write(&myRender, filename.c_str());
+    easyppm_write(&myRender, ("out/"+filename).c_str());
     easyppm_destroy(&myRender);
 }
 
