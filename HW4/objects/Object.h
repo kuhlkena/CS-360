@@ -1,5 +1,6 @@
 #pragma once
 #include "Tuple.h"
+#include "Ray.h"
 
 class Object{
     public:
@@ -8,5 +9,9 @@ class Object{
     double reflect;
     double trance;
     double t;
+    
+    // 0 for plane 1 for sphere
+    int objType;
 
+    bool intersect(Ray& ray, double& distance);
 };

@@ -1,4 +1,5 @@
 #include "Tuple.h"
+#pragma once
 
 class Ray{
     public:

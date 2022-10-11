@@ -21,10 +21,10 @@ class Workspace{
         bool createPlane(Tuple position, Tuple vector, int color[3]);
 
         //checks the colision of a ray with planes in the workspace
-        bool _rayHitPlane( const Ray& ray, const Plane& plane, double& T);
+        bool _rayHitPlane( const Ray& ray, const Object& plane, double& T);
 
         //checks the colision of a ray with spheres in the workspace
-        bool _rayHitSphere( const Ray& ray, const Sphere& sphere, double& T);
+        bool _rayHitSphere( const Ray& ray, const Object& sphere, double& T);
 
         //Render the image and output with filename
         void render(std::string filename);
@@ -36,9 +36,6 @@ class Workspace{
         double w;
         double front;
 
-        Sphere spheres[5];
-        int numSpheres;
-
-        Plane planes[5];
-        int numPlanes;
+        Object objects[5];
+        int numObjects;
 };
