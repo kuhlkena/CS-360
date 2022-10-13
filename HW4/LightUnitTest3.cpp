@@ -10,12 +10,12 @@ int main() {
 	Rgb ambientIntensity(0.3, 0.3, 0.3);
 	Rgb ambientMaterial(0.5, 0.5, 0.5);
 	
-	Tuple lightPoint(0,10,0, 1);
+	Tuple lightPoint(10,0,0, 1); // light point is 90 degrees perpendicular to the object normal
 	Rgb   diffuseIntensity(0.5, 0.5, 0.5);
 	Rgb   diffuseMaterial(0.8, 0.8, 0.8);
 	
 	// Camera or eye point used in specular reflection.
-	Tuple cameraPoint(-10,10,0, 1);
+	Tuple cameraPoint(0,10,0, 1); // camera is exactly 90 degrees from the light source around the object
 	
 	Rgb   specularIntensity(0.5, 0.5, 0.5);
 	Rgb   specularMaterial(0.8, 0.8, 0.8);	
