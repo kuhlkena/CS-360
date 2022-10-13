@@ -3,7 +3,7 @@
 #include <cmath>
 using namespace std;
 
-int main() { //char* argv[], int argc
+int main2() { //char* argv[], int argc
 
 	Rgb ambientIntensity(0.3, 0.3, 0.3);
 	Rgb ambientMaterial(0.5, 0.5, 0.5);
