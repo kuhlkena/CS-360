@@ -1,6 +1,6 @@
 #include "Plane.h"
 
-Plane::Plane(){
+Plane::Plane(): Object {} {
     this->origin = Tuple(0,0,0,1);
     this->normal = Tuple(0,0,1,1);
     this->color[0] = 0;
@@ -10,7 +10,7 @@ Plane::Plane(){
 
 }
 
-Plane::Plane(Tuple Origin, Tuple Normal, int Color[3]){
+Plane::Plane(Tuple Origin, Tuple Normal, int Color[3]): Object {} {
     Normal.normalize();
     this->origin = Origin;
     this->normal = Normal;
@@ -26,7 +26,6 @@ bool Plane::intersect(Ray& ray, double& distance){
     if (abs(den) > 0.001f){
         distance = (this->origin - ray.origin).dot(this->normal) / den;
         if (distance > 0) return true;
-        
     }
     return false;
 }

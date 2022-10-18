@@ -36,6 +36,6 @@ class Scene{
         double w;
         double front;
 
-        Object objects[5];
+        Object* objects[5];
         int numObjects;
 };

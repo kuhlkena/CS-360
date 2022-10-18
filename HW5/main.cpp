@@ -9,18 +9,20 @@ int main() {
     int yellow[] = {200,200,0};
     int bluegreen[] = {0,200,200};
 
+    //Scene for testing ray sphere intersect:
+    Scene test2(20,4,4,4);
+    test2.createSphere(Tuple(0,0,10,1), 2.5, yellow);
+    test2.render("sphere_render.ppm"); // should output as a single black circle in the center of a white image
+
+    /*
+    
     //Scene for testing ray plane intersect:
     Scene test1(200,4,4,4);
     test1.createPlane(Tuple(0,0,10,1), Tuple(0,0,1,0), yellow);
     test1.render("plane_render.ppm"); // should output a solid black image
 
-    //Scene for testing ray sphere intersect:
-    Scene test2(200,4,4,4);
-    test2.createSphere(Tuple(0,0,10,1), 2.5, yellow);
-    test2.render("sphere_render.ppm"); // should output as a single black circle in the center of a white image
-
     //Scene for testing item ordering:
-    Scene test3(1000,4,4,4);
+    Scene test3(200,4,4,4);
     test3.createPlane(Tuple(0,0,10,1), Tuple(0,0,1,0), red);
     test3.createPlane(Tuple(0,0,10,1), Tuple(0,1,-1,0), green);
     test3.createSphere(Tuple(0,0,5,1), 1, blue);
@@ -29,6 +31,6 @@ int main() {
     Tuple temp(1,.5,0,0);
     temp.normalize();
     cout<<temp<<endl;
-
+    */
     return 0;
 }

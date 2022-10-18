@@ -21,14 +21,14 @@ Scene::Scene(int imagePixelSize, double width, double height, double front_clip)
 
 // create a sphere in our workplace and return true when done
 bool Scene::createSphere(Tuple origin, double radius, int color[3]){
-    this->objects[this->numObjects] = Sphere(origin, radius, color);
+    this->objects[this->numObjects] = new Sphere(origin, radius, color);
     this->numObjects++;
     return true;
 }
 
 // create a plane in the workspace
 bool Scene::createPlane(Tuple origin, Tuple normal, int color[3]){
-    this->objects[this->numObjects] = Plane(origin, normal, color);
+    this->objects[this->numObjects] = new Plane(origin, normal, color);
     this->numObjects++;
     return true;
 }
@@ -85,7 +85,7 @@ void Scene::render(std::string filename){
     Tuple X(1,0,0,0);
     Tuple Y(0,1,0,0);
     Tuple Z(0,0,1,0);
-
+    cout<<numObjects<<endl;
     // I opted to use incraments of 1 rather than w/imagePixelSize in my loop because using a float was causing some strange issues
     for(int i = 0; i < this->size; i++){
         for(int j = 0; j < this->size; j++){
@@ -100,22 +100,25 @@ void Scene::render(std::string filename){
             int level[3] = {255,255,255};
             
             double closest = 1000; //This is the back clip
-            Object closestObj;
+            Object* closestObj;
 
 
 
             // for each object call intersect method
             
             for(int p = 0; p < numObjects; p++){
-                objects[p].intersect(R,distance);
-                if(distance < closest){
-                    closest = distance;
-                    closestObj = objects[p];
+                if(objects[p]->intersect(R,distance)){
+                    //cout<<"hit detected"<<endl;
+                    if(distance < closest){
+                        closest = distance;
+                        closestObj = objects[p];
+                    }
                 }
+            }
             
-            level[0] = closestObj.color[0];
-            level[1] = closestObj.color[1];
-            level[2] = closestObj.color[2];
+            level[0] = closestObj->color[0];
+            level[1] = closestObj->color[1];
+            level[2] = closestObj->color[2];
             
             easyppm_set(&myRender, i, this->size -1 - j, easyppm_rgb(level[0], level[1], level[2]));
         
