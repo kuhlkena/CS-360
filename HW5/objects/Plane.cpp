@@ -20,6 +20,13 @@ Plane::Plane(Tuple Origin, Tuple Normal, int Color[3]){
     this->objType = 0;
 }
 
-bool Object::intersect(Ray& ray, double& distance){
+bool Plane::intersect(Ray& ray, double& distance){
     // plane ray intersect
+    float den = this->normal.dot(ray.direction);
+    if (abs(den) > 0.001f){
+        distance = (this->origin - ray.origin).dot(this->normal) / den;
+        if (distance > 0) return true;
+        
+    }
+    return false;
 }

@@ -10,4 +10,6 @@ class Plane: public Object {
     Tuple origin;
     Tuple normal;
 
+    bool intersect(Ray& ray, double& distance);
+
 };

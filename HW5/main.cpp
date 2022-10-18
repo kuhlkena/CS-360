@@ -1,4 +1,4 @@
-#include "Workspace.h"
+#include "Scene.h"
 
 int main() {
     // NOTE: In the current implementation there can be a maximum of 5 spheres and 5 planes in each workspace
@@ -9,18 +9,18 @@ int main() {
     int yellow[] = {200,200,0};
     int bluegreen[] = {0,200,200};
 
-    //Workspace for testing ray plane intersect:
-    Workspace test1(200,4,4,4);
+    //Scene for testing ray plane intersect:
+    Scene test1(200,4,4,4);
     test1.createPlane(Tuple(0,0,10,1), Tuple(0,0,1,0), yellow);
     test1.render("plane_render.ppm"); // should output a solid black image
 
-    //Workspace for testing ray sphere intersect:
-    Workspace test2(200,4,4,4);
+    //Scene for testing ray sphere intersect:
+    Scene test2(200,4,4,4);
     test2.createSphere(Tuple(0,0,10,1), 2.5, yellow);
     test2.render("sphere_render.ppm"); // should output as a single black circle in the center of a white image
 
-    //Workspace for testing item ordering:
-    Workspace test3(1000,4,4,4);
+    //Scene for testing item ordering:
+    Scene test3(1000,4,4,4);
     test3.createPlane(Tuple(0,0,10,1), Tuple(0,0,1,0), red);
     test3.createPlane(Tuple(0,0,10,1), Tuple(0,1,-1,0), green);
     test3.createSphere(Tuple(0,0,5,1), 1, blue);

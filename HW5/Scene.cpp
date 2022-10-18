@@ -1,8 +1,8 @@
-#include "Workspace.h"
+#include "Scene.h"
 Tuple camera(0,0,0,1);
 
 //Default constructor
-Workspace::Workspace(){
+Scene::Scene(){
     this->size = 100;
     this->w = 1;
     this->h = 1;
@@ -10,7 +10,7 @@ Workspace::Workspace(){
     this->numObjects = 0;
 }
 
-Workspace::Workspace(int imagePixelSize, double width, double height, double front_clip){
+Scene::Scene(int imagePixelSize, double width, double height, double front_clip){
     this->size = imagePixelSize;
     this->w = width;
     this->h = height;
@@ -20,21 +20,22 @@ Workspace::Workspace(int imagePixelSize, double width, double height, double fro
 
 
 // create a sphere in our workplace and return true when done
-bool Workspace::createSphere(Tuple origin, double radius, int color[3]){
+bool Scene::createSphere(Tuple origin, double radius, int color[3]){
     this->objects[this->numObjects] = Sphere(origin, radius, color);
     this->numObjects++;
     return true;
 }
 
 // create a plane in the workspace
-bool Workspace::createPlane(Tuple origin, Tuple normal, int color[3]){
+bool Scene::createPlane(Tuple origin, Tuple normal, int color[3]){
     this->objects[this->numObjects] = Plane(origin, normal, color);
     this->numObjects++;
     return true;
 }
 
+/* OLD INTERSECT METHODS
 //checks the colision of a ray with objects in the workspace
-bool Workspace::_rayHitPlane( const Ray& ray, const Object& plane, double& T ){
+bool Scene::_rayHitPlane( const Ray& ray, const Object& plane, double& T ){
     float den = plane.normal.dot(ray.direction);
     if (abs(den) > 0.001f){
         T = (plane.origin - ray.origin).dot(plane.normal) / den;
@@ -45,7 +46,7 @@ bool Workspace::_rayHitPlane( const Ray& ray, const Object& plane, double& T ){
 }
 
 //checks the colision of a ray with spheres in the workspace
-bool Workspace::_rayHitSphere( const Ray& ray, const Object& sphere, double& T ){
+bool Scene::_rayHitSphere( const Ray& ray, const Object& sphere, double& T ){
     
     double a = ray.direction.dot(ray.direction);
     Tuple V1 = camera - sphere.origin;
@@ -70,9 +71,9 @@ bool Workspace::_rayHitSphere( const Ray& ray, const Object& sphere, double& T )
         return false;
     }
 }
-
+*/
 //Render the image and output with filename
-void Workspace::render(std::string filename){
+void Scene::render(std::string filename){
     PPM myRender = easyppm_create(this->size, this->size, IMAGETYPE_PPM);
 
     // Clear all image pixels to RGB color white.
@@ -106,22 +107,10 @@ void Workspace::render(std::string filename){
             // for each object call intersect method
             
             for(int p = 0; p < numObjects; p++){
-                if(objects[p].objType == 0){
-                    if(_rayHitPlane(R, objects[p], distance)) {
-                        if(distance < closest){
-                            closest = distance;
-                            closestObj = objects[p];
-                        }
-                    }
-                }
-
-                if(objects[p].objType == 0){{
-                    if(_rayHitSphere(R, objects[p], distance)) {
-                        if(distance < closest){
-                            closest = distance;
-                            closestObj = objects[p];
-                        }
-                    }
+                objects[p].intersect(R,distance);
+                if(distance < closest){
+                    closest = distance;
+                    closestObj = objects[p];
                 }
             
             level[0] = closestObj.color[0];

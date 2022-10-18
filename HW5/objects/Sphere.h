@@ -10,4 +10,5 @@ class Sphere: public Object{
     Tuple origin;
     double r;
     
+    bool intersect(Ray& ray, double& distance);
 };

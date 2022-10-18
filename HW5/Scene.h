@@ -6,13 +6,13 @@
 #include "objects/Plane.h"
 #include "objects/Sphere.h"
 
-class Workspace{
+class Scene{
 
     public:
         //Default constructor
-        Workspace();
+        Scene();
 
-        Workspace(int imagePixelSize, double width, double height, double front_clip);
+        Scene(int imagePixelSize, double width, double height, double front_clip);
 
         // create a sphere in our workplace and return true when done
         bool createSphere(Tuple position, double radius, int color[3]);
