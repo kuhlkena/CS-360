@@ -5,6 +5,7 @@
 #include "objects/Ray.h"
 #include "objects/Plane.h"
 #include "objects/Sphere.h"
+#include "objects/Lighting.h"
 
 class Scene{
 
@@ -15,10 +16,10 @@ class Scene{
         Scene(int imagePixelSize, double width, double height, double front_clip);
 
         // create a sphere in our workplace and return true when done
-        bool createSphere(Tuple position, double radius, int color[3]);
+        bool createSphere(Tuple position, double radius, Rgb color, Rgb ambient, Rgb diffuse, Rgb specular, int specExp);
 
         // create a plane in the workspace
-        bool createPlane(Tuple position, Tuple vector, int color[3]);
+        bool createPlane(Tuple position, Tuple vector, Rgb color, Rgb ambient, Rgb diffuse, Rgb specular, int specExp);
 
         //checks the colision of a ray with planes in the workspace
         bool _rayHitPlane( const Ray& ray, const Object& plane, double& T);

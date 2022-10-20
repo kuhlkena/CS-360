@@ -20,15 +20,15 @@ Scene::Scene(int imagePixelSize, double width, double height, double front_clip)
 
 
 // create a sphere in our workplace and return true when done
-bool Scene::createSphere(Tuple origin, double radius, int color[3]){
-    this->objects[this->numObjects] = new Sphere(origin, radius, color);
+bool Scene::createSphere(Tuple origin, double radius, Rgb color, Rgb ambient, Rgb diffuse, Rgb specular, int specExp){
+    this->objects[this->numObjects] = new Sphere(origin, radius, color, ambient, diffuse, specular, specExp);
     this->numObjects++;
     return true;
 }
 
 // create a plane in the workspace
-bool Scene::createPlane(Tuple origin, Tuple normal, int color[3]){
-    this->objects[this->numObjects] = new Plane(origin, normal, color);
+bool Scene::createPlane(Tuple origin, Tuple normal, Rgb color, Rgb ambient, Rgb diffuse, Rgb specular, int specExp){
+    this->objects[this->numObjects] = new Plane(origin, normal, color, ambient, diffuse, specular, specExp);
     this->numObjects++;
     return true;
 }
@@ -85,7 +85,6 @@ void Scene::render(std::string filename){
     Tuple X(1,0,0,0);
     Tuple Y(0,1,0,0);
     Tuple Z(0,0,1,0);
-    cout<<numObjects<<endl;
     // I opted to use incraments of 1 rather than w/imagePixelSize in my loop because using a float was causing some strange issues
     for(int i = 0; i < this->size; i++){
         for(int j = 0; j < this->size; j++){
@@ -97,10 +96,10 @@ void Scene::render(std::string filename){
             R.set(Camera, P);
 
             double distance = 0;
-            int level[3] = {255,255,255};
             
             double closest = 1000; //This is the back clip
-            Object* closestObj;
+            int closestObj = -1;
+            Rgb pixel;
 
 
 
@@ -108,19 +107,29 @@ void Scene::render(std::string filename){
             
             for(int p = 0; p < numObjects; p++){
                 if(objects[p]->intersect(R,distance)){
-                    //cout<<"hit detected"<<endl;
                     if(distance < closest){
                         closest = distance;
-                        closestObj = objects[p];
+                        closestObj = p;
                     }
                 }
             }
             
-            level[0] = closestObj->color[0];
-            level[1] = closestObj->color[1];
-            level[2] = closestObj->color[2];
+            //light calculations
             
-            easyppm_set(&myRender, i, this->size -1 - j, easyppm_rgb(level[0], level[1], level[2]));
+            
+            Rgb specular = lightSpecular(specularMaterial, objectPoint, objectNormal, specularIntensity, lightPoint, cameraPoint, specularExponent );
+
+
+            if(closestObj > -1){ //if anything was hit get the closests objects color
+                //TODO calculate point of intersect
+                Tuple objectPoint = R.direction * closest;
+                Tuple objectNormal =
+
+                Rgb ambient = lightAmbient(objects[closestObj]->ambientMaterial, ambientIntensity );
+                Rgb diffuse = lightDiffuse(objects[closestObj]->diffuseMaterial, objectPoint, objectNormal, diffuseIntensity, lightPoint );
+            }
+
+            easyppm_set(&myRender, i, this->size -1 - j, easyppm_rgb(pixel.getR(), pixel.getG(), pixel.getB()));
         
         }
     }

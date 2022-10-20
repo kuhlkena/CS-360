@@ -3,35 +3,31 @@
 Sphere::Sphere(): Object {} {
     this->origin = Tuple(0,0,0,1);
     this->r = 1;
-    this->color[0] = 0;
-    this->color[1] = 0;
-    this->color[2] = 0;
     this->objType = 1;
 }
 
-Sphere::Sphere(Tuple Origin, double Radius, int Color[3]): Object {} {
+Sphere::Sphere(Tuple Origin, double Radius, Rgb Color, Rgb ambient, Rgb diffuse, Rgb specular, int specExp): Object {} {
     this->origin = Origin;
     this->r = Radius;
-    this->color[0] = Color[0];
-    this->color[1] = Color[1];
-    this->color[2] = Color[2];
+    this->color = Color;
+    this->ambientMaterial = ambient;
+    this->diffuseMaterial = diffuse;
+    this->specularMaterial = specular;
+    this->specularExponent = specExp;
     this->objType = 1;
 }
 
 bool Sphere::intersect(Ray& ray, double& distance){
     // sphere ray intersect
     double a = ray.direction.dot(ray.direction);
-    Tuple V1 = Tuple(0,0,0) - this->origin;
+    Tuple V1 = Tuple(0,0,0,1) - this->origin;
+    
+
+    //std::cout<<"R: "<<ray<<std::endl;
     double b = 2 * V1.dot(ray.direction);
     double c = V1.dot(V1) - (this->r * this->r);
 
     double discriminant = b*b - 4*a*c; //note: discriminants is always 25 and abc always the same...
-    
-    //test print functions
-    std::cout<<"Ray = "<<ray.direction<<std::endl;
-    std::cout<<"a = "<<a<<std::endl;
-    std::cout<<"b = "<<b<<std::endl;
-    std::cout<<"c = "<<c<<std::endl;
     
     if (discriminant > 0) {
         double x1 = (-b + sqrt(discriminant)) / (2*a);
@@ -48,4 +44,8 @@ bool Sphere::intersect(Ray& ray, double& distance){
         distance = -1;
         return false;
     }
+}
+
+Tuple Sphere::getNormal(){
+    //TODO
 }

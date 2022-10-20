@@ -5,11 +5,13 @@ class Plane: public Object {
 
     Plane();
 
-    Plane(Tuple Origin, Tuple Normal, int Color[3]);
+    Plane(Tuple Origin, Tuple Normal, Rgb Color, Rgb ambient, Rgb diffuse, Rgb specular, int specExp);
 
     Tuple origin;
     Tuple normal;
 
     bool intersect(Ray& ray, double& distance);
+
+    Tuple getNormal();
 
 };
