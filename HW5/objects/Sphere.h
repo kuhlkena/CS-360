@@ -5,7 +5,7 @@ class Sphere: public Object{
 
     Sphere();
 
-    Sphere(Tuple Origin, double Radius, Rgb Color, Rgb ambient, Rgb diffuse, Rgb specular, int specExp);
+    Sphere(Tuple Origin, double Radius, Rgb ambient, Rgb diffuse, Rgb specular, int specExp);
 
     Tuple origin;
     double r;

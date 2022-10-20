@@ -6,10 +6,9 @@ Sphere::Sphere(): Object {} {
     this->objType = 1;
 }
 
-Sphere::Sphere(Tuple Origin, double Radius, Rgb Color, Rgb ambient, Rgb diffuse, Rgb specular, int specExp): Object {} {
+Sphere::Sphere(Tuple Origin, double Radius, Rgb ambient, Rgb diffuse, Rgb specular, int specExp): Object {} {
     this->origin = Origin;
     this->r = Radius;
-    this->color = Color;
     this->ambientMaterial = ambient;
     this->diffuseMaterial = diffuse;
     this->specularMaterial = specular;
@@ -47,5 +46,5 @@ bool Sphere::intersect(Ray& ray, double& distance){
 }
 
 Tuple Sphere::getNormal(){
-    //TODO
+    return this->origin - Tuple(0,0,0,1);
 }

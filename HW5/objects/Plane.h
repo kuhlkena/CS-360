@@ -5,7 +5,7 @@ class Plane: public Object {
 
     Plane();
 
-    Plane(Tuple Origin, Tuple Normal, Rgb Color, Rgb ambient, Rgb diffuse, Rgb specular, int specExp);
+    Plane(Tuple Origin, Tuple Normal, Rgb ambient, Rgb diffuse, Rgb specular, int specExp);
 
     Tuple origin;
     Tuple normal;

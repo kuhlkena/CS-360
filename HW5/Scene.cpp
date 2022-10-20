@@ -20,15 +20,15 @@ Scene::Scene(int imagePixelSize, double width, double height, double front_clip)
 
 
 // create a sphere in our workplace and return true when done
-bool Scene::createSphere(Tuple origin, double radius, Rgb color, Rgb ambient, Rgb diffuse, Rgb specular, int specExp){
-    this->objects[this->numObjects] = new Sphere(origin, radius, color, ambient, diffuse, specular, specExp);
+bool Scene::createSphere(Tuple origin, double radius, Rgb ambient, Rgb diffuse, Rgb specular, int specExp){
+    this->objects[this->numObjects] = new Sphere(origin, radius, ambient, diffuse, specular, specExp);
     this->numObjects++;
     return true;
 }
 
 // create a plane in the workspace
-bool Scene::createPlane(Tuple origin, Tuple normal, Rgb color, Rgb ambient, Rgb diffuse, Rgb specular, int specExp){
-    this->objects[this->numObjects] = new Plane(origin, normal, color, ambient, diffuse, specular, specExp);
+bool Scene::createPlane(Tuple origin, Tuple normal, Rgb ambient, Rgb diffuse, Rgb specular, int specExp){
+    this->objects[this->numObjects] = new Plane(origin, normal, ambient, diffuse, specular, specExp);
     this->numObjects++;
     return true;
 }
@@ -72,6 +72,16 @@ bool Scene::_rayHitSphere( const Ray& ray, const Object& sphere, double& T ){
     }
 }
 */
+
+//creates or sets the light point
+bool Scene::createLight(Rgb ambient, Rgb diffuse, Rgb specular, Tuple position){
+    this->ambientIntensity = ambient;
+    this->diffuseIntensity = diffuse;
+    this->specularIntensity = specular; 
+    this->lightPoint = position;
+    return true;
+}
+
 //Render the image and output with filename
 void Scene::render(std::string filename){
     PPM myRender = easyppm_create(this->size, this->size, IMAGETYPE_PPM);
@@ -115,18 +125,14 @@ void Scene::render(std::string filename){
             }
             
             //light calculations
-            
-            
-            Rgb specular = lightSpecular(specularMaterial, objectPoint, objectNormal, specularIntensity, lightPoint, cameraPoint, specularExponent );
-
-
             if(closestObj > -1){ //if anything was hit get the closests objects color
-                //TODO calculate point of intersect
                 Tuple objectPoint = R.direction * closest;
-                Tuple objectNormal =
+                Tuple objectNormal = objects[closestObj]->getNormal();
 
                 Rgb ambient = lightAmbient(objects[closestObj]->ambientMaterial, ambientIntensity );
                 Rgb diffuse = lightDiffuse(objects[closestObj]->diffuseMaterial, objectPoint, objectNormal, diffuseIntensity, lightPoint );
+                Rgb specular = lightSpecular(objects[closestObj]->specularMaterial, objectPoint, objectNormal, specularIntensity, lightPoint, camera, objects[closestObj]->specularExponent );
+                Rgb pixel = ambient + diffuse + specular;
             }
 
             easyppm_set(&myRender, i, this->size -1 - j, easyppm_rgb(pixel.getR(), pixel.getG(), pixel.getB()));

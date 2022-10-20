@@ -7,11 +7,10 @@ Plane::Plane(): Object {} {
 
 }
 
-Plane::Plane(Tuple Origin, Tuple Normal, Rgb Color, Rgb ambient, Rgb diffuse, Rgb specular, int specExp): Object {} {
+Plane::Plane(Tuple Origin, Tuple Normal, Rgb ambient, Rgb diffuse, Rgb specular, int specExp): Object {} {
     Normal.normalize();
     this->origin = Origin;
     this->normal = Normal;
-    this->color = Color;
     this->ambientMaterial = ambient;
     this->diffuseMaterial = diffuse;
     this->specularMaterial = specular;
@@ -29,6 +28,6 @@ bool Plane::intersect(Ray& ray, double& distance){
     return false;
 }
 
-Tuple getNormal(){
-    //TODO
+Tuple Plane::getNormal(){
+    return this->normal;
 }

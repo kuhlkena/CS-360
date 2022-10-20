@@ -16,16 +16,19 @@ class Scene{
         Scene(int imagePixelSize, double width, double height, double front_clip);
 
         // create a sphere in our workplace and return true when done
-        bool createSphere(Tuple position, double radius, Rgb color, Rgb ambient, Rgb diffuse, Rgb specular, int specExp);
+        bool createSphere(Tuple position, double radius, Rgb ambient, Rgb diffuse, Rgb specular, int specExp);
 
         // create a plane in the workspace
-        bool createPlane(Tuple position, Tuple vector, Rgb color, Rgb ambient, Rgb diffuse, Rgb specular, int specExp);
+        bool createPlane(Tuple position, Tuple vector, Rgb ambient, Rgb diffuse, Rgb specular, int specExp);
 
         //checks the colision of a ray with planes in the workspace
-        bool _rayHitPlane( const Ray& ray, const Object& plane, double& T);
+        bool _rayHitPlane(const Ray& ray, const Object& plane, double& T);
 
         //checks the colision of a ray with spheres in the workspace
-        bool _rayHitSphere( const Ray& ray, const Object& sphere, double& T);
+        bool _rayHitSphere(const Ray& ray, const Object& sphere, double& T);
+
+        //creates or sets the light point
+        bool createLight(Rgb ambient, Rgb diffuse, Rgb specular, Tuple position);
 
         //Render the image and output with filename
         void render(std::string filename);
@@ -36,6 +39,12 @@ class Scene{
         double h;
         double w;
         double front;
+
+        Rgb ambientIntensity;
+        Rgb diffuseIntensity;
+        Rgb specularIntensity;
+        int specularExponent;
+        Tuple lightPoint;
 
         Object* objects[5];
         int numObjects;

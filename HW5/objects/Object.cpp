@@ -9,6 +9,6 @@ bool Object::intersect(Ray& ray, double& distance){
     return false;
 }
 
-Tuple getNormal(){
+Tuple Object::getNormal(){
     return Tuple();
 }
