@@ -10,7 +10,7 @@ int main() {
 	Rgb ambientIntensity(0.3, 0.3, 0.3);
 	Rgb ambientMaterial(0.5, 0.5, 0.5);
 	
-	Tuple lightPoint(10,0,0, 1); // light point is 90 degrees perpendicular to the object normal
+	Tuple lightPoint(10,10,0, 1); // light point is 90 degrees perpendicular to the object normal
 	Rgb   diffuseIntensity(0.5, 0.5, 0.5);
 	Rgb   diffuseMaterial(0.8, 0.8, 0.8);
 	

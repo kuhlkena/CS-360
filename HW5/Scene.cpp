@@ -1,5 +1,4 @@
 #include "Scene.h"
-Tuple camera(0,0,0,1);
 
 //Default constructor
 Scene::Scene(){
@@ -79,6 +78,7 @@ bool Scene::createLight(Rgb ambient, Rgb diffuse, Rgb specular, Tuple position){
     this->diffuseIntensity = diffuse;
     this->specularIntensity = specular; 
     this->lightPoint = position;
+    cout<<"light created"<<endl;
     return true;
 }
 
@@ -126,16 +126,19 @@ void Scene::render(std::string filename){
             
             //light calculations
             if(closestObj > -1){ //if anything was hit get the closests objects color
-                Tuple objectPoint = R.direction * closest;
+                Tuple objectPoint = (R.direction * closest) + Camera;
                 Tuple objectNormal = objects[closestObj]->getNormal();
 
                 Rgb ambient = lightAmbient(objects[closestObj]->ambientMaterial, ambientIntensity );
                 Rgb diffuse = lightDiffuse(objects[closestObj]->diffuseMaterial, objectPoint, objectNormal, diffuseIntensity, lightPoint );
-                Rgb specular = lightSpecular(objects[closestObj]->specularMaterial, objectPoint, objectNormal, specularIntensity, lightPoint, camera, objects[closestObj]->specularExponent );
-                Rgb pixel = ambient + diffuse + specular;
+                //TODO diffuse: (0, -0, -0) this is the output of diffuse, specular also seems to be semi constant across the surface
+                Rgb specular = lightSpecular(objects[closestObj]->specularMaterial, objectPoint, objectNormal, specularIntensity, lightPoint, Camera, objects[closestObj]->specularExponent );
+                pixel = ambient + diffuse + specular;
+                cout<<"ambient: "<<ambient<<" diffuse: "<<diffuse<<" specular: "<<specular<<endl;
+                cout<<"total: "<<pixel<<endl;
             }
-
-            easyppm_set(&myRender, i, this->size -1 - j, easyppm_rgb(pixel.getR(), pixel.getG(), pixel.getB()));
+            
+            easyppm_set(&myRender, i, this->size -1 - j, easyppm_rgb(pixel.getR()*255, pixel.getG()*255, pixel.getB()*255));
         
         }
     }

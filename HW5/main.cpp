@@ -6,7 +6,7 @@ int main() {
     Rgb ambient(0.5,0,0);
     Rgb diffuse(0.8,0,0);
     Rgb specular(0.8,0,0);
-    Rgb lightAmbient(.1,.1,.1);
+    Rgb lightAmbient(.3,.3,.3);
     Rgb lightDiffuse(.5,.5,.5);
     Rgb lightSpecular(.5,.5,.5);
     Tuple lightPoint(5,5,5,1);
@@ -16,10 +16,6 @@ int main() {
     test2.createSphere(Tuple(0,0,10,1), 2.5,ambient,diffuse,specular,4);
     test2.createLight(lightAmbient,lightDiffuse,lightSpecular,lightPoint);
     test2.render("sphere_render.ppm"); // should output as a single black circle in the center of a white image
-    
-    Tuple temp(1,.5,0,0);
-    temp.normalize();
-    cout<<temp<<endl;
 
     return 0;
 }
