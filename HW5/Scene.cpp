@@ -127,7 +127,18 @@ void Scene::render(std::string filename){
             //light calculations
             if(closestObj > -1){ //if anything was hit get the closests objects color
                 Tuple objectPoint = (R.direction * closest) + Camera;
-                Tuple objectNormal = objects[closestObj]->getNormal();
+                Tuple objectNormal;
+
+                if(objects[closestObj]->objType == 0){ //if object is a plane
+                    objectNormal = objects[closestObj]->getNormal();
+                }
+
+                else{
+                    objectNormal = objects[closestObj]->origin - objectPoint;
+                }
+
+                objectNormal.normalize();
+                cout<<"normal: "<<objectNormal<<endl;
 
                 Rgb ambient = lightAmbient(objects[closestObj]->ambientMaterial, ambientIntensity );
                 Rgb diffuse = lightDiffuse(objects[closestObj]->diffuseMaterial, objectPoint, objectNormal, diffuseIntensity, lightPoint );

@@ -15,6 +15,8 @@ class Object{
 	int specularExponent;
 
     double t;
+
+    Tuple origin;
     
     // 0 for plane 1 for sphere -1 for undefined
     int objType;

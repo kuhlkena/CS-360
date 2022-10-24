@@ -7,7 +7,7 @@ class Plane: public Object {
 
     Plane(Tuple Origin, Tuple Normal, Rgb ambient, Rgb diffuse, Rgb specular, int specExp);
 
-    Tuple origin;
+    
     Tuple normal;
 
     bool intersect(Ray& ray, double& distance);

@@ -44,7 +44,3 @@ bool Sphere::intersect(Ray& ray, double& distance){
         return false;
     }
 }
-
-Tuple Sphere::getNormal(){
-    return this->origin - Tuple(0,0,0,1);
-}
