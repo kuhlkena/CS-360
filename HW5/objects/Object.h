@@ -21,7 +21,7 @@ class Object{
     // 0 for plane 1 for sphere -1 for undefined
     int objType;
 
-    virtual bool intersect(Ray& ray, double& distance);
+    virtual bool intersect(const Ray& ray, double& distance);
 
     virtual Tuple getNormal();
 };

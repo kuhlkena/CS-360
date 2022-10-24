@@ -9,5 +9,5 @@ class Sphere: public Object{
 
     double r;
     
-    bool intersect(Ray& ray, double& distance);
+    bool intersect(const Ray& ray, double& distance);
 };

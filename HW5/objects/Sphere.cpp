@@ -16,10 +16,10 @@ Sphere::Sphere(Tuple Origin, double Radius, Rgb ambient, Rgb diffuse, Rgb specul
     this->objType = 1;
 }
 
-bool Sphere::intersect(Ray& ray, double& distance){
+bool Sphere::intersect(const Ray& ray, double& distance){
     // sphere ray intersect
     double a = ray.direction.dot(ray.direction);
-    Tuple V1 = Tuple(0,0,0,1) - this->origin;
+    Tuple V1 = ray.origin - this->origin;
     
 
     //std::cout<<"R: "<<ray<<std::endl;

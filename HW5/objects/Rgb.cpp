@@ -74,6 +74,21 @@ double Rgb::getG() const {
 double Rgb::getB() const {
 	return this->b;
 }
+
+void Rgb::setR(double red){
+	this->r = red;
+	this->clamp();
+}
+
+void Rgb::setG(double green){
+	this->g = green;
+	this->clamp();
+}
+
+void Rgb::setB(double blue){
+	this->b = blue;
+	this->clamp();
+}
 		
 // Reference: https://docs.microsoft.com/en-us/cpp/standard-library/overloading-the-output-operator-for-your-own-classes?view=msvc-170
 ostream& operator<<(ostream& os, const Rgb& T) {

@@ -4,7 +4,7 @@ Object::Object(){
     this->t = 0;
 }
 
-bool Object::intersect(Ray& ray, double& distance){
+bool Object::intersect(const Ray& ray, double& distance){
     std::cout<<"default object intersect used"<<endl;
     return false;
 }

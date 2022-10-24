@@ -38,6 +38,10 @@ class Rgb {
 		double getR() const;
 		double getG() const;
 		double getB() const;
+
+		void setR(double red);
+		void setG(double green);
+		void setB(double blue);
 		
     // Reference: https://docs.microsoft.com/en-us/cpp/standard-library/overloading-the-output-operator-for-your-own-classes?view=msvc-170
     friend ostream& operator<<(ostream& os, const Rgb& T);

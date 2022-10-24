@@ -35,8 +35,11 @@ Rgb lightAmbient( const Rgb& materialReflectance, const Rgb& lightIntensity ){
 Rgb lightDiffuse(const Rgb& materialReflectance, const Tuple& objectPoint, const Tuple& objectNormal, const Rgb& lightIntensity, const Tuple& lightPoint){
     Tuple L = lightPoint - objectPoint;
     L.normalize();
+    //cout<<"L: "<<L<<" objectNormal: "<<objectNormal<<endl;
     double NL = L.dot(objectNormal);
+    //cout<<"---NL: "<<NL<<" lightintensity: "<<lightIntensity<<" materialReflectance: "<<materialReflectance<<endl;
     Rgb diffuse = lightIntensity * materialReflectance * NL;
+    //cout<<"diffuse: "<<diffuse<<endl;
     return diffuse;
 }
 
@@ -64,8 +67,9 @@ Rgb lightSpecular(const Rgb& materialReflectance, const Tuple& objectPoint, cons
     Tuple L = lightPoint - objectPoint;
     L.normalize();
 
-    Tuple RV = L - 2 * L.dot(objectNormal) * objectNormal;
+    Tuple RV = 2 * L.dot(objectNormal) * objectNormal - L; // I noticed that the equasion on canvas is actually generating a reflected vecor facing the wrong way so specular highlights were reversed
     Tuple EV = eyePoint - objectPoint;
+    
     EV.normalize();
     RV.normalize();
 

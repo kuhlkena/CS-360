@@ -7,6 +7,7 @@ Scene::Scene(){
     this->h = 1;
     this->front = 1;
     this->numObjects = 0;
+    this->numLights = 0;
 }
 
 Scene::Scene(int imagePixelSize, double width, double height, double front_clip){
@@ -15,6 +16,7 @@ Scene::Scene(int imagePixelSize, double width, double height, double front_clip)
     this->h = height;
     this->front = front_clip;
     this->numObjects = 0;
+    this->numLights = 0;
 }
 
 
@@ -32,64 +34,41 @@ bool Scene::createPlane(Tuple origin, Tuple normal, Rgb ambient, Rgb diffuse, Rg
     return true;
 }
 
-/* OLD INTERSECT METHODS
-//checks the colision of a ray with objects in the workspace
-bool Scene::_rayHitPlane( const Ray& ray, const Object& plane, double& T ){
-    float den = plane.normal.dot(ray.direction);
-    if (abs(den) > 0.001f){
-        T = (plane.origin - ray.origin).dot(plane.normal) / den;
-        if (T > 0) return true;
-        
-    }
+
+//creates or sets the light point
+bool Scene::createLight(Light* light){
+    this->lights[this->numLights] = light;
+    this->numLights++;
+    return true;
+}
+
+//check all object intersects
+bool Scene::_intersectObjects(const Ray& ray, double& closest, int& closestObj){
+    closest = 1000; // This is the back clip
+    closestObj = -1;
+    double distance = 0;
+    for(int p = 0; p < numObjects; p++){
+                if(objects[p]->intersect(ray,distance)){
+                    if(distance < closest){
+                        closest = distance;
+                        closestObj = p;
+                    }
+                }
+            }
+    if(closestObj > -1){return true;}
     return false;
 }
 
-//checks the colision of a ray with spheres in the workspace
-bool Scene::_rayHitSphere( const Ray& ray, const Object& sphere, double& T ){
-    
-    double a = ray.direction.dot(ray.direction);
-    Tuple V1 = camera - sphere.origin;
-    double b = 2 * V1.dot(ray.direction);
-    double c = V1.dot(V1) - (sphere.r * sphere.r);
-
-    double discriminant = b*b - 4*a*c;
-    
-    if (discriminant > 0) {
-        double x1 = (-b + sqrt(discriminant)) / (2*a);
-        double x2 = (-b - sqrt(discriminant)) / (2*a);
-        T = min(x1,x2);
-        return true;
-    }
-
-    else if (discriminant == 0) {
-        T = -b/(2*a);
-        return true;
-    }
-    else {
-        T = -1;
-        return false;
-    }
-}
-*/
-
-//creates or sets the light point
-bool Scene::createLight(Rgb ambient, Rgb diffuse, Rgb specular, Tuple position){
-    this->ambientIntensity = ambient;
-    this->diffuseIntensity = diffuse;
-    this->specularIntensity = specular; 
-    this->lightPoint = position;
-    cout<<"light created"<<endl;
-    return true;
-}
 
 //Render the image and output with filename
 void Scene::render(std::string filename){
     PPM myRender = easyppm_create(this->size, this->size, IMAGETYPE_PPM);
 
-    // Clear all image pixels to RGB color white.
-    easyppm_clear(&myRender, easyppm_rgb(225, 255, 255));
+    // Clear all image pixels to RGB color black.
+    easyppm_clear(&myRender, easyppm_rgb(0, 0, 0));
 
     Ray R;
+    Ray L;
     Tuple B(-(this->w/2),0 -(this->h/2), this->front, 1); // bottom left corner of screen
     Tuple Camera(0,0,0,1);
     Tuple X(1,0,0,0);
@@ -101,56 +80,60 @@ void Scene::render(std::string filename){
 
             float stepX = i/(this->size/this->w);
             float stepY = j/(this->size/this->h);
-
             Tuple P = B + stepX*X + stepY*Y;
+
+            //Set normal vector into scene
             R.set(Camera, P);
-
-            double distance = 0;
             
-            double closest = 1000; //This is the back clip
-            int closestObj = -1;
-            Rgb pixel;
-
-
-
-            // for each object call intersect method
+            //Ray object intersects
+            double closest;
+            int closestObj;
+            bool hit = _intersectObjects(R, closest, closestObj);
             
-            for(int p = 0; p < numObjects; p++){
-                if(objects[p]->intersect(R,distance)){
-                    if(distance < closest){
-                        closest = distance;
-                        closestObj = p;
+            //Light calculations
+            if(hit){ //if an object is it
+                Rgb pixel;
+                Tuple objectPoint = (R.direction * closest) + Camera; //point of intersect
+                Rgb greatestAmbient(0,0,0);
+                
+                for(int l = 0; l < numLights; l++){ //loops throught all lights
+                    L.set(objectPoint, lights[l]->lightPoint); //Creates a ray from the intersect to the current light
+                    if(lights[l]->ambient.getR() > greatestAmbient.getR()){greatestAmbient.setR(lights[l]->ambient.getR());} //next three lines find biggest ambient values among all lights
+                    if(lights[l]->ambient.getG() > greatestAmbient.getG()){greatestAmbient.setG(lights[l]->ambient.getG());} 
+                    if(lights[l]->ambient.getB() > greatestAmbient.getB()){greatestAmbient.setB(lights[l]->ambient.getB());} 
+
+                    double temp;
+                    bool shadow = false;
+                    for(int p = 0; p < numObjects; p++){ //checks for intersects along ray L
+                        if(objects[p]->intersect(L, temp) && p != closestObj && temp > 0){
+                            cout<<"found a shadow"<<endl;
+                            shadow = true;
+                        }
+                    }
+
+                    if(~shadow){
+                        Tuple objectNormal;
+                        Rgb diffuseIntensity = lights[l]->diffuse;
+                        Rgb specularIntensity = lights[l]->specular;
+
+                        if(objects[closestObj]->objType == 0){ //if object is a plane
+                            objectNormal = objects[closestObj]->getNormal();
+                        }
+
+                        else{ //if object is a sphere
+                            objectNormal = objectPoint - objects[closestObj]->origin;
+                        }
+
+                        objectNormal.normalize();
+
+                        Rgb diffuse = lightDiffuse(objects[closestObj]->diffuseMaterial, objectPoint, objectNormal, diffuseIntensity, lights[l]->lightPoint);
+                        Rgb specular = lightSpecular(objects[closestObj]->specularMaterial, objectPoint, objectNormal, specularIntensity, lights[l]->lightPoint, Camera, objects[closestObj]->specularExponent);
+                        pixel = pixel + diffuse + specular;
                     }
                 }
+                pixel = pixel + lightAmbient(objects[closestObj]->ambientMaterial, greatestAmbient);
+                easyppm_set(&myRender, i, this->size -1 - j, easyppm_rgb(pixel.getR()*255, pixel.getG()*255, pixel.getB()*255));
             }
-            
-            //light calculations
-            if(closestObj > -1){ //if anything was hit get the closests objects color
-                Tuple objectPoint = (R.direction * closest) + Camera;
-                Tuple objectNormal;
-
-                if(objects[closestObj]->objType == 0){ //if object is a plane
-                    objectNormal = objects[closestObj]->getNormal();
-                }
-
-                else{
-                    objectNormal = objects[closestObj]->origin - objectPoint;
-                }
-
-                objectNormal.normalize();
-                cout<<"normal: "<<objectNormal<<endl;
-
-                Rgb ambient = lightAmbient(objects[closestObj]->ambientMaterial, ambientIntensity );
-                Rgb diffuse = lightDiffuse(objects[closestObj]->diffuseMaterial, objectPoint, objectNormal, diffuseIntensity, lightPoint );
-                //TODO diffuse: (0, -0, -0) this is the output of diffuse, specular also seems to be semi constant across the surface
-                Rgb specular = lightSpecular(objects[closestObj]->specularMaterial, objectPoint, objectNormal, specularIntensity, lightPoint, Camera, objects[closestObj]->specularExponent );
-                pixel = ambient + diffuse + specular;
-                cout<<"ambient: "<<ambient<<" diffuse: "<<diffuse<<" specular: "<<specular<<endl;
-                cout<<"total: "<<pixel<<endl;
-            }
-            
-            easyppm_set(&myRender, i, this->size -1 - j, easyppm_rgb(pixel.getR()*255, pixel.getG()*255, pixel.getB()*255));
-        
         }
     }
     easyppm_write(&myRender, ("out/"+filename).c_str());

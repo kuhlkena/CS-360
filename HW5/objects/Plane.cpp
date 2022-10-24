@@ -18,7 +18,7 @@ Plane::Plane(Tuple Origin, Tuple Normal, Rgb ambient, Rgb diffuse, Rgb specular,
     this->objType = 0;
 }
 
-bool Plane::intersect(Ray& ray, double& distance){
+bool Plane::intersect(const Ray& ray, double& distance){
     // plane ray intersect
     float den = this->normal.dot(ray.direction);
     if (abs(den) > 0.001f){

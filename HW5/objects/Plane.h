@@ -10,7 +10,7 @@ class Plane: public Object {
     
     Tuple normal;
 
-    bool intersect(Ray& ray, double& distance);
+    bool intersect(const Ray& ray, double& distance);
 
     Tuple getNormal();
 

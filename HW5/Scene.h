@@ -1,11 +1,14 @@
-#include "objects/easyppm.h"
 #include <stdio.h>
 #include <math.h>
 #include <cmath>
+#include <vector>
 #include "objects/Ray.h"
 #include "objects/Plane.h"
 #include "objects/Sphere.h"
 #include "objects/Lighting.h"
+#include "objects/Light.h"
+#include "objects/easyppm.h"
+
 
 class Scene{
 
@@ -21,14 +24,11 @@ class Scene{
         // create a plane in the workspace
         bool createPlane(Tuple position, Tuple vector, Rgb ambient, Rgb diffuse, Rgb specular, int specExp);
 
-        //checks the colision of a ray with planes in the workspace
-        bool _rayHitPlane(const Ray& ray, const Object& plane, double& T);
-
-        //checks the colision of a ray with spheres in the workspace
-        bool _rayHitSphere(const Ray& ray, const Object& sphere, double& T);
+        //check all object intersects
+        bool _intersectObjects(const Ray& ray, double& closest, int& closestObj);
 
         //creates or sets the light point
-        bool createLight(Rgb ambient, Rgb diffuse, Rgb specular, Tuple position);
+        bool createLight(Light* light);
 
         //Render the image and output with filename
         void render(std::string filename);
@@ -40,12 +40,11 @@ class Scene{
         double w;
         double front;
 
-        Rgb ambientIntensity;
-        Rgb diffuseIntensity;
-        Rgb specularIntensity;
-        int specularExponent;
-        Tuple lightPoint;
-
-        Object* objects[5];
+        Object* objects[10];
+        Light* lights[5];
+        //vector<Object*> objects;
+        //vector<Light*> lights;
+        
         int numObjects;
+        int numLights;
 };
