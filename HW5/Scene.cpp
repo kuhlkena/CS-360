@@ -44,7 +44,7 @@ bool Scene::createLight(Light* light){
 
 //check all object intersects
 bool Scene::_intersectObjects(const Ray& ray, double& closest, int& closestObj){
-    closest = 1000; // This is the back clip
+    closest = 5000; // This is the back clip
     closestObj = -1;
     double distance = 0;
     for(int p = 0; p < numObjects; p++){
@@ -94,7 +94,7 @@ void Scene::render(std::string filename){
             if(hit){ //if an object is it
                 Rgb pixel;
                 Tuple objectPoint = (R.direction * closest) + Camera; //point of intersect
-                Rgb greatestAmbient(0,0,0);
+                Rgb greatestAmbient;
                 
                 for(int l = 0; l < numLights; l++){ //loops throught all lights
                     L.set(objectPoint, lights[l]->lightPoint); //Creates a ray from the intersect to the current light
@@ -105,13 +105,11 @@ void Scene::render(std::string filename){
                     double temp;
                     bool shadow = false;
                     for(int p = 0; p < numObjects; p++){ //checks for intersects along ray L
-                        if(objects[p]->intersect(L, temp) && p != closestObj && temp > 0){
-                            cout<<"found a shadow"<<endl;
+                        if(objects[p]->intersect(L, temp) && p != closestObj && temp > 0 && temp < L.direction.magnitude()){
                             shadow = true;
                         }
                     }
-
-                    if(~shadow){
+                    if(!shadow){
                         Tuple objectNormal;
                         Rgb diffuseIntensity = lights[l]->diffuse;
                         Rgb specularIntensity = lights[l]->specular;
