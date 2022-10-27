@@ -23,7 +23,9 @@ class Rgb {
 		
     // Initializing constructor - initializes Rgb to have given values.
 		// Clamps given values so that they each range between 0.0 to 1.0, inclusive.
-    Rgb(double r, double g, double b);		
+    	Rgb(double r, double g, double b);
+
+		Rgb(double intensity);
 		
     // Copy constructor - receives another Rgb as argument.
     // Initialize this Rgb to hold identical r, g, and b values as the given argument.

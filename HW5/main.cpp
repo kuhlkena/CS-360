@@ -21,10 +21,19 @@ void createFrame(int frameNum, double i){
     }
 
 int main() {
+    /*
     for(double i = 0; i < 500; i++){
         createFrame(i,i/50);
         cout<<i/50<<'%'<<endl;
     }
+    */
 
+    Scene image(1000,4,4,4);
+    image.createSphere(Tuple(2,0,10,1),1,Rgb(.5,0,0),Rgb(.8,0,0),Rgb(1,.5,.5),5); //red
+    image.createPlane(Tuple(0,0,100,1),Tuple(0,0,1),Rgb(.4),Rgb(.8),Rgb(1),3); //white
+
+    image.createLight(new Light(Rgb(.1,.1,.1),Rgb(.8,.8,.8),Rgb(1,1,1),Tuple(2.1,0,5,1)));//white
+
+    image.render("test.ppm");
     return 0;
 }

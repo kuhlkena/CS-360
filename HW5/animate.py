@@ -1,5 +1,4 @@
 import cv2
-from PIL import Image
 import os
 
 folder = r"C:\Users\akuhl\OneDrive\Documents\GitHub\CS-360\HW5\out"

@@ -24,6 +24,12 @@ Rgb::Rgb(const Rgb& src) {
 	this->b = src.b;
 }
 
+Rgb::Rgb(double intensity){
+	this->r = intensity;
+	this->g = intensity;
+	this->b = intensity;
+}
+
 // Clamps r, g, b values so they are all between 0.0 and 1.0, inclusive.
 void Rgb::clamp() {
 	if(this->r < 0.0)

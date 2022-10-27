@@ -105,7 +105,7 @@ void Scene::render(std::string filename){
                     double temp;
                     bool shadow = false;
                     for(int p = 0; p < numObjects; p++){ //checks for intersects along ray L
-                        if(objects[p]->intersect(L, temp) && p != closestObj && temp > 0 && temp < L.direction.magnitude()){
+                        if(objects[p]->intersect(L, temp) && p != closestObj && temp < (objectPoint-lights[l]->lightPoint).magnitude()){
                             shadow = true;
                         }
                     }
