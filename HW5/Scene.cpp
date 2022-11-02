@@ -107,7 +107,7 @@ void Scene::render(std::string filename){
                     //TODO for eachshadow intersect compute anle of hit and save largest angle
                     //use angles to shade shadows
                     for(int p = 0; p < numObjects; p++){ //checks for intersects along ray L
-                        if(objects[p]->intersect(L, temp) && p != closestObj && temp < (objectPoint-lights[l]->lightPoint).magnitude()){
+                        if(objects[p]->intersect(L, temp) && p != closestObj && temp > 0 && temp < (objectPoint-lights[l]->lightPoint).magnitude()){
                             shadow = true;
                         }
                     }
